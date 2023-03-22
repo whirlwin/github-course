@@ -3,11 +3,18 @@ name: 'hello'
 on:
   push:
   workflow_dispatch:
+  inputs:
+    environment:
+      description: 'environment to deploy to'
+      type: environment
+      required: true
+        
+
 
 
 
 jobs:
-  job1:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.3.0
@@ -21,4 +28,41 @@ jobs:
       - name: Output time set in the container
         run: echo "The time was ${{ steps.hello-action.outputs.time }} when the action said èllo"
     
-
+  Test:
+    runs-on: ubuntu-latest
+    if: github.event_name = "workflow_dispatch"
+    needs: [Build]
+    environment: Test    
+    steps:
+      - run: "echo 'testing...'"
+      
+  Load-Test:
+    runs-on: ubuntu-latest
+    if: github.event_name = "workflow_dispatch"
+    needs: [Build]
+    environment: Load-Test
+    steps:
+     - run: "echo 'testing'; sleep 15"
+     
+  Production:
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://writeabout.net
+    if: github.event.inputs.environment = "Production"
+    steps:
+      - run: |
+          echo "🚀 Step 1..."
+          sleep 10
+      - run: |
+          echo "🚀 Step 2..."
+          sleep 10
+      - run: |
+          echo "🚀 Step 3..."
+          sleep 10
+      - run: |
+          echo "🚀 Step 4..."
+          sleep 10    
+      - run: |
+          echo "🚀 Step 5..."
+          sleep 10
