@@ -1,3 +1,8 @@
-workflow_dispatch:
-  inputs:
-  
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'environment to deploy to'
+        type: environment
+        required: true
+        
