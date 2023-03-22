@@ -6,3 +6,7 @@ on:
         type: environment
         required: true
         
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    
